@@ -1,41 +1,34 @@
 import axios from 'axios';
 import { createReducer } from '@reduxjs/toolkit';
 import { combineReducers } from 'redux';
+import { changeFilter } from './contacts-actions';
 import {
-  fetchContactsRequest,
-  fetchContactsSuccess,
-  fetchContactsError,
-  addContactRequest,
-  addContactSuccess,
-  addContactError,
-  deleteContactRequest,
-  deleteContactSuccess,
-  deleteContactError,
-  changeFilter,
-} from './contacts-actions';
+  fetchContacts,
+  addContact,
+  deleteContact,
+} from './contacts-operations';
 
 axios.defaults.baseURL = 'https://619362fcd3ae6d0017da852d.mockapi.io';
 
 const items = createReducer([], {
-  [fetchContactsSuccess]: (_, { payload }) => payload,
-  [addContactSuccess]: (state, { payload }) => {
-    return [...state, payload];
-  },
-  [deleteContactSuccess]: (state, { payload }) => {
-    return state.filter(({ id }) => id !== payload);
+  [fetchContacts.fulfilled]: (_, { payload }) => payload,
+  [addContact.fulfilled]: (state, { payload }) => [...state, payload],
+  [deleteContact.fulfilled]: (state, { payload }) => {
+    console.log('payload', payload);
+    return state.filter(({ id }) => id !== payload.id);
   },
 });
 
 const loading = createReducer(false, {
-  [fetchContactsRequest]: () => true,
-  [fetchContactsSuccess]: () => false,
-  [fetchContactsError]: () => false,
-  [addContactRequest]: () => true,
-  [addContactSuccess]: () => false,
-  [addContactError]: () => false,
-  [deleteContactRequest]: () => true,
-  [deleteContactSuccess]: () => false,
-  [deleteContactError]: () => false,
+  [fetchContacts.pending]: () => true,
+  [fetchContacts.fulfilled]: () => false,
+  [fetchContacts.rejected]: () => false,
+  [addContact.pending]: () => true,
+  [addContact.fulfilled]: () => false,
+  [addContact.rejected]: () => false,
+  [deleteContact.pending]: () => true,
+  [deleteContact.fulfilled]: () => false,
+  [deleteContact.rejected]: () => false,
 });
 
 const filter = createReducer('', {

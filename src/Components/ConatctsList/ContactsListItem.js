@@ -1,6 +1,10 @@
 import { useEffect } from 'react';
 import { connect } from 'react-redux';
-import operations from '../../redux/contacts/contacts-operations';
+import {
+  fetchContacts,
+  deleteContact,
+} from '../../redux/contacts/contacts-operations';
+// import operations from '../../redux/contacts/contacts-operations';
 
 function ContactsListItem({ contacts, deleteContact, fetchContacts }) {
   useEffect(() => {
@@ -33,8 +37,8 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  fetchContacts: () => dispatch(operations.fetchContacts()),
-  deleteContact: id => dispatch(operations.deleteContact(id)),
+  fetchContacts: () => dispatch(fetchContacts()),
+  deleteContact: id => dispatch(deleteContact(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ContactsListItem);

@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
-import contactsOperations from '../../redux/contacts/contacts-operations';
+import { addContact } from '../../redux/contacts/contacts-operations';
 
 class Form extends Component {
   state = {
@@ -10,8 +10,20 @@ class Form extends Component {
 
   onSubmit = e => {
     e.preventDefault();
-    this.props.addContact(this.state.name, this.state.number);
-    this.setState({ name: '', number: '' });
+
+    const contactsArr = [];
+    this.props.contacts.forEach(el => {
+      contactsArr.push(el.name, el.number);
+    });
+
+    if (contactsArr.includes(this.state.number)) {
+      /* Проверка на имя || this.state.name.toLowerCase().trim())  */
+      alert('This umber is already in contacts. Please change information');
+      return;
+    } else {
+      this.props.addContact(this.state);
+      this.setState({ name: '', number: '' });
+    }
   };
 
   onChange = e => {
@@ -56,9 +68,16 @@ class Form extends Component {
   }
 }
 
+const mapStateToProps = state => {
+  return {
+    contacts: state.contacts.items,
+  };
+};
+
 const mapDispatchToProps = dispatch => ({
-  addContact: (userName, userNumber) =>
-    dispatch(contactsOperations.addContact(userName, userNumber)),
+  // addContact: (userName, userNumber) =>
+  //   dispatch(addContact(userName, userNumber)),
+  addContact: state => dispatch(addContact(state)),
 });
 
-export default connect(null, mapDispatchToProps)(Form);
+export default connect(mapStateToProps, mapDispatchToProps)(Form);

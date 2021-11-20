@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import operations from '../../redux/contacts/contacts-operations';
+import { deleteContact } from '../../redux/contacts/contacts-operations';
 
 function Filter({ contacts, filter, deleteContact }) {
   const findUsers = () => {
@@ -35,7 +35,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  deleteContact: id => dispatch(operations.deleteContact(id)),
+  deleteContact: id => dispatch(deleteContact(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Filter);
